@@ -11,8 +11,11 @@ module.exports = (sequelize) => {
     ID: {
       type: DataTypes.STRING(3),
       allowNull: false,
+      type: DataTypes.UUID,
+      primaryKey: true
     },
     Bandera: {
+     type: DataTypes.STRING,
       allowNull: false,
     },
     Continente: {
@@ -23,33 +26,15 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    Subregion: {
+    Subregión: {
       type: DataTypes.STRING,
     },
-    Area: {
+    Área: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
     Población: {
       type: DataTypes.INTEGER
-    },
-  });
-
-  sequelize.define('activity', {
-    ID: {
-      type: DataTypes.INTEGER
-    },
-    Nombre: {
-      type: DataTypes.STRING
-    },
-    Dificultad: {
-      type: DataTypes.INTEGER
-    },
-    Duracion: {
-      type: DataTypes.INTEGER
-    },
-    Temporada: {
-      type: DataTypes.STRING
     },
   });
 };
