@@ -9,21 +9,21 @@ const router=Router()
 
 router.get('/mostrar', async(req, res, next)=>{
     try {
-   
-
         //Pedido a la BD
-        const pedidoBd = await Activity.findAll()
+        const pedidoBd = await Activity.findAll({
+            attributes:['nombre', 'dificultad', 'duracion', 'temporada']
+        })
 
         if(pedidoBd ){
-            let aux= pedidoBd?.map(a=>{
+            /* let aux= pedidoBd?.map(a=>{
                 return{
-                    Nombre: a.Nombre,
-                    Dificultad: a.Dificultad,
-                    Duración: a.Duración,
-                    Temporada:a.Temporada
+                    nombre: a.Nombre,
+                    dificultad: a.Dificultad,
+                    duracion: a.Duracion,
+                    temporada:a.Temporada
                 }
-            })
-            res.send(aux)
+            }) */
+            res.send(pedidoBd)
         }else{
             res.json({message:'algo salio mal'})
         }
