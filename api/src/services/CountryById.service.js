@@ -1,9 +1,17 @@
 const { Country, Activity } = require('../db')
+const { Op } = require("sequelize")
 
 const CountryByIdService = async (id) => {
 
     try {
-        const getCountry = await Country.findByPk(id);
+        const getCountry = await Country.findByPk(id,{
+            include: [{
+                model: Activity,
+                through: {
+                    attributes: [],
+                }
+            }]
+        });
 
         if (!getCountry) {
             console.log('El Pais no fue encontrado');
