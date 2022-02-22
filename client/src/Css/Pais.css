@@ -1,0 +1,12 @@
+.pais {
+
+    flex-wrap: wrap;
+    justify-content: column;
+}
+
+.bandera{
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 8px;
+    margin-top: 8px;
+}
