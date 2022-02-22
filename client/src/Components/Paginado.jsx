@@ -8,14 +8,12 @@ export default function Paginado({countriesPerPage,allCountries, paginado}){
         pageNumber.push(i)
     }
 return (
-    <nav>
-        <ul className='paginado'>
+        <nav>
+            <div className='paginado'>
             {pageNumber?.map(number=>(
-                
-                <button onClick={()=>paginado(number)}>{number}</button>
-                
-            ))}
-        </ul>
-    </nav>
-)
+                    <button className='but' onClick={()=>paginado(number)}>{number}</button>
+                ))}
+            </div>
+        </nav>
+    )
 }

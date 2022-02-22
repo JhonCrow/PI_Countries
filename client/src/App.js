@@ -4,12 +4,14 @@ import Home from './Components/Home.jsx';
 import LandingPage from './Components/LandingPage.jsx'
 import ActivityCreate from './Components/ActivityCreate';
 import Paises from './Components/Paises';
+import NavBar from './Components/NavBar';
 
 
 function App() {
   return (
     <BrowserRouter>
     <div className="App">
+    <NavBar/>
       <Switch>
       <Route exact path='/' component={LandingPage}/>
       <Route exact path='/home' component={Home}/>
