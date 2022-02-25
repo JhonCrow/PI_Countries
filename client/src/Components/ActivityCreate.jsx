@@ -1,217 +1,198 @@
-import React, {useState, useEffect} from 'react';
-import {Link, /*useHistory*/} from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { postActivity, getNameCountries, getCountries } from '../Actions';
+import '../Css/ActivityCreate.css'
 
-function validate(input){
-    let errors={};
-    if(!input.nombre){
-        errors.nombre='El nombre es requerido';
-    } 
-    if(!input.dificultad){
+function validate(input) {
+    let errors = {};
+    if (!input.nombre && input.nombre !== Number ) {
+        errors.nombre = 'El nombre es requerido';
+    }
+    if (!input.dificultad) {
         errors.dificultad = 'Debe especificar dificultad';
     }
-    if(!input.duracion){  
+    if (!input.duracion) {
         errors.duracion = 'Debe especificar la duración';
     }
-    if(!input.temporada){
+    if (!input.temporada) {
         errors.temporada = 'Debe seleccionar la temporada;'
     }
-    if(!input.pais){
+    if (input.pais.length <= 0) {
         errors.pais = 'Debe seleccionar al menos 1 pais;'
     }
     return errors;
 }
 
-export default function ActivityCreate(){
-const dispatch = useDispatch();
-//const history= useHistory();
-const [name, setName] = useState('')
-const[errors, setErrors]=useState({})
+export default function ActivityCreate({ close }) {
+    const dispatch = useDispatch();
+    const [name, setName] = useState('')
+    const [errors, setErrors] = useState({})
+    const countries = useSelector((state) => state.countries)
 
-const temporada =['Primavera', 'Verano', 'Otoño', 'Invierno']
 
-const [input, setInput] =useState({
-    nombre:'',
-    dificultad:'',
-    duracion:'',
-    temporada:[],
-    pais:[]
-})
+    const temporada = ['Primavera', 'Verano', 'Otoño', 'Invierno']
 
-useEffect(()=>{
-    dispatch(getCountries( ))
-}, [dispatch]) 
-
-function handleInputChange(e){
-    setInput({
-        ...input,
-        [e.target.name]:e.target.value
+    const [input, setInput] = useState({
+        nombre: '',
+        dificultad: '',
+        duracion: '',
+        temporada: [],
+        pais: []
     })
-    setErrors(validate({
-        ...input,
-        [e.target.name]:e.target.value
-    }))
-    console.log(input)
-}
 
-function handleInputSelectTemp(e){
-    setInput({
-        ...input,
-        temporada:e.target.value
-    })
-    setErrors(validate({
-        ...input,
-        temporada:e.target.value
-    }))
-    console.log(input)
-}
+    useEffect(() => {
+        dispatch(getCountries())
+    }, [dispatch])
 
-function handleInputBarSearchChange(e){
-    setName(e.target.value) 
-}
+    function handleInputChange(e) {
+        setInput({
+            ...input,
+            [e.target.name]: e.target.value
+        })
+        setErrors(validate({
+            ...input,
+            [e.target.name]: e.target.value
+        }))
+        console.log(input)
+    }
 
-function handlebarSearchSubmit(e){
-    e.preventDefault();
-    dispatch(getNameCountries(name)) 
-    setInput({
-        ...input,
-            pais:[...input.pais, name]
-    })
-    setErrors(validate({
-        ...input,
-        [e.target.name]:e.target.value
-    }))
-}
+    function handleInputSelectTemp(e) {
+        setInput({
+            ...input,
+            temporada: e.target.value
+        })
+        setErrors(validate({
+            ...input,
+            temporada: e.target.value
+        }))
+        console.log(input)
+    }
 
-function handleDeletePais(p){
-    setInput({
-        ...input,
-            pais: input.pais.filter( pa => pa !== p )
-    })
-}
+    function handlebarSearchSubmit(e) {
+        e.preventDefault();
+        const country = countries.find((country) => country.nombre === name );
+        if(country){
+            setInput({
+                ...input,
+                pais: [...input.pais, country.nombre]
+            })
+        }
+        setErrors(validate({
+            ...input,
+            [e.target.name]: e.target.value
+        }))
+    }
 
-function handleSubmit(e){
-    e.preventDefault();
-    dispatch(postActivity(input))
-    alert('La activiad se ha creado con exito')
-    setInput({
-        nombre:'',
-        dificultad:'',
-        duracion:'',
-        temporada:[],
-        pais:[]
-    })
-   // history.push('/home')
-}
+    function handleDeletePais(p) {
+        setInput({
+            ...input,
+            pais: input.pais.filter(pa => pa !== p)
+        })
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        dispatch(postActivity(input))
+        alert('La activiad se ha creado con exito')
+        setInput({
+            nombre: '',
+            dificultad: '',
+            duracion: '',
+            temporada: [],
+            pais: []
+        })
+    }
 
 
-return(
-    <div>
-        <Link to='/home'><button>Volver</button></Link>
-        <h1>Crea tu actividad</h1>
+    return (
+        <div className='activityContainer'>
+            <h1>Crea tu actividad</h1>
 
-            <form onSubmit={ e => handleSubmit(e)}>
+            <form onSubmit={e => handleSubmit(e)}>
                 <div>
-                    <label>Nombre:</label>
-                    <input 
-                    type='text' 
-                    name='nombre'
-                    value={input.nombre}
-                    onChange={e => handleInputChange(e)}/>
-                    {errors.nombre && (<p>{errors.nombre}</p>)}
-                    
+                    <label>Nombre: </label>
+                    <input
+                        type='text'
+                        name='nombre'
+                        value={input.nombre}
+                        onChange={e => handleInputChange(e)} 
+                        className='placeHolder' />
+                    {errors.nombre && (<p className='alertError'>{errors.nombre}</p>)}
                 </div>
 
                 <div>
-                    <label>Dificultad:</label>
-                    <input 
-                    type='number'
-                    name='dificultad'
-                    min='1'
-                    max='5'
-                    value={input.dificultad}
-                    onChange={e => handleInputChange(e)}/>
-                     {errors.dificultad && (<p>{errors.dificultad}</p>)}
-                </div>
-                
-                <div>
-                    <label>Duración:</label>
-                    <input 
-                    type='number'
-                    name='duracion'
-                    min='1'
-                    max='10'
-                    value={input.duracion}
-                    onChange={e => handleInputChange(e)}/><label>horas</label>
-                    {errors.duracion && (<p>{errors.duracion}</p>)}
+                    <label>Dificultad: </label>
+                    <input
+                        type='number'
+                        name='dificultad'
+                        min='1'
+                        max='5'
+                        value={input.dificultad}
+                        onChange={e => handleInputChange(e)} 
+                        className='placeHolder'/>
+                    {errors.dificultad && (<p className='alertError'>{errors.dificultad}</p>)}
                 </div>
 
                 <div>
-                <label>Temporada</label>
-                    <select 
-                    name='temporada'
-                    onChange={(e) =>handleInputSelectTemp(e)} defaultValue='' >
-                    <option value=''>Seleccionar</option>
-                        {temporada.map((t)=>(
+                    <label>Duración: </label>
+                    <input
+                        type='number'
+                        name='duracion'
+                        min='1'
+                        max='10'
+                        value={input.duracion}
+                        onChange={e => handleInputChange(e)} 
+                        className='placeHolder'/><label>horas</label>
+                    {errors.duracion && (<p className='alertError'>{errors.duracion}</p>)}
+                </div>
+
+                <div>
+                    <label>Temporada </label>
+                    <select
+                        name='temporada'
+                        onChange={(e) => handleInputSelectTemp(e)} defaultValue='' >
+                        <option value=''>Seleccionar</option>
+                        {temporada.map((t) => (
                             <option value={t}>{t}</option>
                         ))}
                     </select>
-                    {errors.temporada && (<p>{errors.temporada}</p>)}
+                    {errors.temporada && (<p className='alertError'>{errors.temporada}</p>)}
                 </div>
 
                 <div>
-                    <label>Pais:</label>
+                    <label>Pais: </label>
                     <input
-                    type= 'text'
-                    placeholder = 'Buscar...'
-                    onChange={ e => handleInputBarSearchChange(e)}
+                        type='text'
+                        placeholder='Buscar...'
+                        onChange={e => setName(e.target.value)}
+                        className='placeHolder'
                     />
-                    <button type='submit' onClick={ e => handlebarSearchSubmit(e)}>Agregar</button>
-                    {errors.pais && (<p>{errors.pais}</p>)}
+                    <button
+                    type='submit'
+                    className='addBtn'
+                    onClick={e => handlebarSearchSubmit(e)}>Agregar</button>
+                    {errors.pais && (<p className='alertError'>{errors.pais}</p>)}
                 </div>
 
-                <button type='Submit'>Crear</button>
+                <button type='Submit' className='createBtn'>Crear</button>
 
-            </form>   
+            </form>
+            
+            <div className='countriesContainer'>
+            {input.pais.map(p =>
+                <div className='countryContainer'> <p>{p}</p><button
+                    onClick={() => handleDeletePais(p)}
+                    className='deleteCountryBtn'
+                    >x</button>
+                </div>)}
+            </div>
 
-            {input.pais.map( p =>
-                    <div>
-                        <p>{p}</p>
-                        <button onClick={()=> handleDeletePais(p)}>x</button>
-                    </div>)}
+
+                <button
+                        className='closeButon'
+                        onClick={close}
+                        >x</button>
 
         </div>
     )
-
 }
-
-/* //estado
-const paises = useSelector((state)=> state.countries);
-
-useEffect(()=>{
-    dispatch(getCountries( ))
-}, [dispatch])
-
-//metodo
- function handleInputSelectPais(e){
-    setInput({
-        ...input,
-        pais:[...input.pais, e.target.value]
-    })
-    console.log(input)
-} 
-
-//renderizado
-<div>
-<label>Pais</label>
-<select onChange={e => handleInputSelectPais(e)} defaultValue=''>
-<option value=''>---</option>
-    {paises.map((c)=>(
-        <option value={c.nombre}>{c.nombre}</option>
-    ))}
-</select>
-
- <ul><li>{input.pais.map(p=> `${p},`)}</li></ul>
-
-</div>  */
