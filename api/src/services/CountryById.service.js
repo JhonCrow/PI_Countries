@@ -1,8 +1,6 @@
 const { Country, Activity } = require('../db');
-const { Op } = require("sequelize");
 
 const CountryByIdService = async (id) => {
-
     try {
         const getCountry = await Country.findByPk(id, {
             include: [{
@@ -18,11 +16,10 @@ const CountryByIdService = async (id) => {
         };
         return getCountry;
 
-    } 
+    }
     catch (error) {
         console.log(error);
         throw error;
     };
 };
-
 module.exports = { CountryByIdService };

@@ -8,10 +8,10 @@ const getActivitiesService = async () => {
                 through: {
                     attributes: [],
                 }
-            }]
+            }],
         });
         return activities;
-    } 
+    }
     catch (error) {
         console.log(error);
         throw error;

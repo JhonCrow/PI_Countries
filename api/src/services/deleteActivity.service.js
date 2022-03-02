@@ -1,9 +1,8 @@
-const { Activity, Country } = require('../db');
+const { Activity } = require('../db');
 const { Op } = require("sequelize");
 
 const deleteActivityService = async (nombre) => {
     try {
-        console.log(nombre)
         if (!nombre) {
             console.log('Actividad no encontrada');
             throw new Error('La actividad no puede ser encontrada');

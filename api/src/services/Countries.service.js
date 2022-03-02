@@ -3,7 +3,6 @@ const { Op } = require("sequelize")
 const axios = require('axios');
 
 const getCountriesService = async (name) => {
-
     try {
         const countriesDB = await axios.get('https://restcountries.com/v3/all');
         countriesDB.data.forEach(async (c) => {
@@ -18,7 +17,7 @@ const getCountriesService = async (name) => {
                     area: c.area,
                     poblacion: c.population
                 }
-            })
+            });
         },
             console.log('Datos cargados')
         );
@@ -45,7 +44,7 @@ const getCountriesService = async (name) => {
                     through: {
                         attributes: [],
                     }
-                }]
+                }],
             });
             return getCountry;
         } else {
@@ -58,5 +57,4 @@ const getCountriesService = async (name) => {
         throw error;
     };
 };
-
 module.exports = { getCountriesService };
