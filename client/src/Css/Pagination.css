@@ -2,8 +2,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap:5px;
-  background-color:  #98abce;
+  background-color: #ff880000;
+  background-image: linear-gradient(#ebebeb05, #244eda);
 }
 .paginado .but{
   width: 30px;
@@ -16,12 +16,16 @@
   margin: 1em;
   background-color: white;
   color: black;
-  border: 2px solid #244eda;
+  border: 1px solid;
   transition-duration: 0.3s;
   cursor: pointer;
 }
 .but:hover{
-   
+  background-color: #244eda;
+  color: white;
+}
+
+.but:focus{
   background-color: #244eda;
   color: white;
 }

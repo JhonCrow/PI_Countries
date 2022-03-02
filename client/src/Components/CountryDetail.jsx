@@ -11,6 +11,7 @@ export default function CountryDetail({ country, close }){
 
                     <div>
                         <h2>{country.nombre}</h2>
+                        <h4>{country.ID}</h4>
                         <h4>Continente: {country.continente}</h4>
                         <h4>Capital: {country.capital}</h4>
                         <h4>Subregion: {country.subregion}</h4>
@@ -21,8 +22,8 @@ export default function CountryDetail({ country, close }){
                     <div>
                         <h3>Actividades</h3>
                         {country.activities?.map(a => (
-                            <div key={country.ID}>
-                                <h5>{a.nombre}</h5>
+                            <div key={country.ID} className='actvitiesContainerDetail'>
+                                <h4>{a.nombre}</h4>
                                 <h5>Dificultad: {a.dificultad}</h5>
                                 <h5>Duración: {a.duracion}</h5>
                                 <h5>Temporada: {a.temporada}</h5>

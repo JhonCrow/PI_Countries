@@ -1,4 +1,3 @@
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     filterByContinente, orderByName, orderByPopulation,
@@ -6,11 +5,13 @@ import {
 } from '../Actions';
 import '../Css/Filter.css';
 
-export default function Filter({ handleChangeCurrentPage, handleActivitySelected }) {
+export default function Filter({ handleChangeCurrentPage }) {
     const dispatch = useDispatch();
-    const activities = useSelector((state) => state.activities)
-    function handleFiltroContinente(e) {
+    const activities = useSelector((state) => state.activities);
+
+    function handleFilterContinent(e) {
         dispatch(filterByContinente(e.target.value));
+        handleChangeCurrentPage(1);
     };
 
     function handleOrderName(e) {
@@ -29,11 +30,10 @@ export default function Filter({ handleChangeCurrentPage, handleActivitySelected
     };
 
     return (
-        <div className='filter'>
-            <button>Limpiar filtros</button>
+        <div className='filterContainer' id='1'>
             <div className='opt'>
-                <label>Continente</label>
-                <select onChange={e => handleFiltroContinente(e)}>
+                <select onChange={e => handleFilterContinent(e)} id='1'>
+                    <option value='Nada'>Continente</option>
                     <option value='All'>Todos</option>
                     <option value='Africa'>Africa</option>
                     <option value='Americas'>America</option>
@@ -45,37 +45,31 @@ export default function Filter({ handleChangeCurrentPage, handleActivitySelected
             </div>
 
             <div className='opt'>
-                <label>Orden Alfabetico</label>
-                <select onChange={e => handleOrderName(e)} >
-                    <option value='All'>---</option>
+                <select onChange={e => handleOrderName(e)} id='1'>
+                    <option value='Nada'>Orden Alfabetico</option>
                     <option value='Asc'>A-Z</option>
                     <option value='Desc'>Z-A</option>
                 </select>
             </div>
 
             <div className='opt'>
-                <label>Cantidad de población</label>
-                <select onChange={e => handleOrderPob(e)}>
-                    <option value='Todo'>---</option>
+                <select onChange={e => handleOrderPob(e)} id='1'>
+                    <option value='Nada'>Cantidad de población</option>
                     <option value='Mayor'>Mayor</option>
                     <option value='Menor'>Menor</option>
                 </select>
             </div>
 
             <div className='opt'>
-                <label>Actividades Creadas</label>
-                <select onChange={e => handleFilterByActiviy(e)}>
-                    <option value='All'>---</option>
+                <select onChange={e => handleFilterByActiviy(e)} id='1'>
+                    <option value='Nada'>Actividades Creadas</option>
                     {activities?.map((a) => (
                         <option
-                        value={a.countries.map(c => c.nombre)} key={a.id}
+                            value={a.countries.map(c => c.nombre)} key={a.id}
                         >{a.nombre}</option>
                     ))}
                 </select>
             </div>
-
-            <button onClick={handleActivitySelected}>crear actividad</button>
-
         </div>
-    )
-}
+    );
+};

@@ -10,6 +10,14 @@ export function getCountries() {
     };
 };
 
+/* export function getCountries() {
+    return function (dispatch) {
+        return fetch('http://localhost:3001/countries')
+        .then(r => r.json())
+        .then(json => {dispatch({type: 'GET_COUNTRIES', payload: json })});
+    };
+}; */
+
 export function getActivities() {
     return async function (dispatch) {
         const getAct = await axios.get('http://localhost:3001/activities');
@@ -24,7 +32,7 @@ export function getNameCountries(nombre) {
     return async function (dispatch) {
         console.log(nombre)
         var names = await axios.get('http://localhost:3001/countries?name=' + nombre);
-        console.log(names)
+        console.log(names.data)
         return dispatch({
             type: 'GET_NAME_COUNTRIES',
             payload: names.data,
@@ -75,5 +83,5 @@ export function filterByActivities(payload) {
     return {
         type: 'FILTER_BY_ACTIVITIES',
         payload,
-    }
-}
+    };
+};

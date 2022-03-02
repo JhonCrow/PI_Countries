@@ -6,7 +6,8 @@ export default function Pagination({ countriesPerPage, allCountries, paginado })
 
     for (let i = 1; i <= Math.ceil((allCountries + 1) / countriesPerPage)  ; i++) {
         pageNumber.push(i)
-    }
+    };
+
     return (
         <nav>
             <div className='paginado'>

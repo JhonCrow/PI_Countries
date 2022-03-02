@@ -1,108 +1,109 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { postActivity, getNameCountries, getCountries } from '../Actions';
+import { postActivity, getActivities, getCountries } from '../Actions';
 import '../Css/ActivityCreate.css'
 
 function validate(input) {
     let errors = {};
-    if (!input.nombre && input.nombre !== Number ) {
-        errors.nombre = 'El nombre es requerido';
-    }
+    console.log(errors);
+    if (!input.nombre) {
+        errors.nombre = 'El nombre es requerido.';
+    }else if (input.nombre.length > 30){
+        errors.nombre = 'no debe exceder las 30 letras';
+        }else if (!/^[A-Z ]+$/i.test(input.nombre)){
+            errors.nombre = 'Solo pueden ser letras';
+    };
     if (!input.dificultad) {
-        errors.dificultad = 'Debe especificar dificultad';
-    }
+        errors.dificultad = 'Debe especificar dificultad.';
+    };
     if (!input.duracion) {
-        errors.duracion = 'Debe especificar la duración';
-    }
+        errors.duracion = 'Debe especificar la duración.';
+    };
     if (!input.temporada) {
-        errors.temporada = 'Debe seleccionar la temporada;'
-    }
+        errors.temporada = 'Debe seleccionar la temporada.'
+    };
     if (input.pais.length <= 0) {
-        errors.pais = 'Debe seleccionar al menos 1 pais;'
-    }
+        errors.pais = 'Debe seleccionar al menos 1 pais.'
+    };
     return errors;
-}
+};
 
 export default function ActivityCreate({ close }) {
     const dispatch = useDispatch();
-    const [name, setName] = useState('')
-    const [errors, setErrors] = useState({})
-    const countries = useSelector((state) => state.countries)
-
-
-    const temporada = ['Primavera', 'Verano', 'Otoño', 'Invierno']
-
+    const [errors, setErrors] = useState({});
+    const countries = useSelector((state) => state.countries);
+    const temporada = ['Primavera', 'Verano', 'Otoño', 'Invierno'];
     const [input, setInput] = useState({
         nombre: '',
         dificultad: '',
         duracion: '',
-        temporada: [],
-        pais: []
-    })
-
-    useEffect(() => {
-        dispatch(getCountries())
-    }, [dispatch])
+        temporada: '',
+        pais: [],
+    });
 
     function handleInputChange(e) {
         setInput({
             ...input,
             [e.target.name]: e.target.value
-        })
+        });
         setErrors(validate({
             ...input,
             [e.target.name]: e.target.value
-        }))
-        console.log(input)
-    }
+        })); 
+    };
 
     function handleInputSelectTemp(e) {
         setInput({
             ...input,
             temporada: e.target.value
-        })
+        });
         setErrors(validate({
             ...input,
             temporada: e.target.value
-        }))
-        console.log(input)
-    }
+        }));
+    };
 
-    function handlebarSearchSubmit(e) {
-        e.preventDefault();
-        const country = countries.find((country) => country.nombre === name );
-        if(country){
-            setInput({
-                ...input,
-                pais: [...input.pais, country.nombre]
-            })
-        }
-        setErrors(validate({
+    function handleSelectCountry(e) {
+        console.log(input.pais)
+        setInput({
             ...input,
-            [e.target.name]: e.target.value
-        }))
-    }
+            pais: [...input.pais, e.target.value]
+        });
+        if (input.pais.length < 1){
+            setErrors(validate({
+                ...input,
+                pais: [e.target.value],
+            }));
+        };
+    };
 
     function handleDeletePais(p) {
         setInput({
             ...input,
             pais: input.pais.filter(pa => pa !== p)
-        })
-    }
+        });
+
+    };
 
     function handleSubmit(e) {
         e.preventDefault();
-        dispatch(postActivity(input))
-        alert('La activiad se ha creado con exito')
-        setInput({
-            nombre: '',
-            dificultad: '',
-            duracion: '',
-            temporada: [],
-            pais: []
-        })
-    }
-
+        if(!input.nombre || !input.dificultad || !input.duracion || !input.temporada || input.pais.length < 1 ){
+            alert('¡Algo faltó! Debes llenar todos los campos.');
+        }else {
+            dispatch(postActivity(input));
+            alert('¡Felicidades! Actividad creada con exito');
+            dispatch(getActivities());
+            setInput({
+                nombre: '',
+                dificultad: '',
+                duracion: '',
+                temporada: '',
+                pais: []
+            });
+            dispatch(getActivities());
+            dispatch(getCountries());
+        };
+    };
 
     return (
         <div className='activityContainer'>
@@ -115,7 +116,7 @@ export default function ActivityCreate({ close }) {
                         type='text'
                         name='nombre'
                         value={input.nombre}
-                        onChange={e => handleInputChange(e)} 
+                        onChange={e => handleInputChange(e)}
                         className='placeHolder' />
                     {errors.nombre && (<p className='alertError'>{errors.nombre}</p>)}
                 </div>
@@ -128,8 +129,8 @@ export default function ActivityCreate({ close }) {
                         min='1'
                         max='5'
                         value={input.dificultad}
-                        onChange={e => handleInputChange(e)} 
-                        className='placeHolder'/>
+                        onChange={e => handleInputChange(e)}
+                        className='placeHolder' />
                     {errors.dificultad && (<p className='alertError'>{errors.dificultad}</p>)}
                 </div>
 
@@ -141,13 +142,13 @@ export default function ActivityCreate({ close }) {
                         min='1'
                         max='10'
                         value={input.duracion}
-                        onChange={e => handleInputChange(e)} 
-                        className='placeHolder'/><label>horas</label>
+                        onChange={e => handleInputChange(e)}
+                        className='placeHolder' /><label>hora(s)</label>
                     {errors.duracion && (<p className='alertError'>{errors.duracion}</p>)}
                 </div>
 
                 <div>
-                    <label>Temporada </label>
+                    <label>Temporada: </label>
                     <select
                         name='temporada'
                         onChange={(e) => handleInputSelectTemp(e)} defaultValue='' >
@@ -159,40 +160,43 @@ export default function ActivityCreate({ close }) {
                     {errors.temporada && (<p className='alertError'>{errors.temporada}</p>)}
                 </div>
 
-                <div>
-                    <label>Pais: </label>
-                    <input
-                        type='text'
-                        placeholder='Buscar...'
-                        onChange={e => setName(e.target.value)}
-                        className='placeHolder'
-                    />
-                    <button
-                    type='submit'
-                    className='addBtn'
-                    onClick={e => handlebarSearchSubmit(e)}>Agregar</button>
+                    <div>
+                        <label>Pais: </label>
+                        <select
+                        name='pais'
+                        onChange={(e) => handleSelectCountry(e)} defaultValue=''>
+                        <option value= ''>Seleccionar Pais</option>
+                        {countries?.map((c) => (
+                            <option
+                            value={c.nombre} key={c.id}
+                            >{c.nombre}</option>
+                        ))}
+                    </select>
                     {errors.pais && (<p className='alertError'>{errors.pais}</p>)}
-                </div>
+                    </div>
 
-                <button type='Submit' className='createBtn'>Crear</button>
-
+                    <div className='countriesContainer'>
+                        {input.pais.map(p =>
+                            <div className='countryContainer'> 
+                            <p>{p}</p>
+                            <button
+                            onClick={() => handleDeletePais(p)}
+                            className='deleteCountryBtn'
+                            >x</button>
+                            </div>
+                            )}
+                            
+                    </div>
+                <button
+                    type='Submit'
+                    className='createBtn'
+                >Crear</button>
             </form>
             
-            <div className='countriesContainer'>
-            {input.pais.map(p =>
-                <div className='countryContainer'> <p>{p}</p><button
-                    onClick={() => handleDeletePais(p)}
-                    className='deleteCountryBtn'
-                    >x</button>
-                </div>)}
-            </div>
-
-
-                <button
-                        className='closeButon'
-                        onClick={close}
-                        >x</button>
-
+            <button
+                className='closeButon'
+                onClick={close}
+            >x</button>
         </div>
     )
 }

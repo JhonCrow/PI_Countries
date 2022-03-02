@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 export default function LandingPage() {
     return (
-        <div className='containerLanding'>
+        <div className='containerLanding' data-testid='title'>
             <video className='video' src={tierra} autoPlay loop muted />
             <h1>Hola Mundo</h1>
             <Link to={'/home'}>

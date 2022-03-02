@@ -12,13 +12,13 @@ export default function rootReducer(state = initialState, action) {
                 ...state,
                 countries: action.payload,
                 allCountries: action.payload
-            }
+            };
 
         case 'GET_ACTIVITIES':
             return {
                 ...state,
                 activities: action.payload,
-            }
+            };
 
         case 'FILTER_BY_CONTINENTE':
             const allCountries = state.allCountries
@@ -26,7 +26,7 @@ export default function rootReducer(state = initialState, action) {
             return {
                 ...state,
                 countries: continenteFiltro
-            }
+            };
 
         case 'ORDER_BY_NAME':
             const orderName = action.payload === 'Asc' ?
@@ -47,12 +47,13 @@ export default function rootReducer(state = initialState, action) {
                         return 1;
                     }
                     return 0
-                })
+                });
 
             return {
                 ...state,
                 countries: orderName
-            }
+            };
+
         case 'ORDER_BY_POBLACION':
             const orderPob = action.payload === 'Mayor' ?
                 state.countries.slice().sort((a, b) => b.poblacion - a.poblacion) :
@@ -60,24 +61,25 @@ export default function rootReducer(state = initialState, action) {
             return {
                 ...state,
                 countries: orderPob
-            }
+            };
 
         case 'GET_NAME_COUNTRIES':
             return {
                 ...state,
                 countries: action.payload,
-            }
+            };
 
         case 'POST_ACTIVITY':
             return {
                 ...state,
-            }
+            };
 
         case 'GET_DETAIL':
             return {
                 ...state,
                 detail: action.payload
-            }
+            };
+
         case 'FILTER_BY_ACTIVITIES':
             let names = action.payload.split(',')
             const country = state.allCountries;
@@ -85,12 +87,10 @@ export default function rootReducer(state = initialState, action) {
             return {
                 ...state,
                 countries: countryActivity
-            }
-
-
+            };
 
         default:
             return state;
-    }
-}
+    };
+};
 

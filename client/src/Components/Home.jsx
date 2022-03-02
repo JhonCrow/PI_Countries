@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux'
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
 import Pagination from './Pagination';
 import CountryCard from './CountryCard';
 import Filter from './Filter';
 import CountryDetail from './CountryDetail';
 import NavBar from './NavBar';
 import ActivityCreate from './ActivityCreate';
+import { getCountries, getActivities } from '../Actions';
 
 export default function Home() {
+    const dispatch = useDispatch();
     const countries = useSelector((state) => state.countries);
     const [countrySelected, setCountrySelected] = useState(null);
     const [activitySeleceted, setActivitySelected] = useState(null);
@@ -17,26 +19,29 @@ export default function Home() {
         (indexOfFirstCountry === 0 ? 1 : indexOfFirstCountry) - 1,
         indexOfFirstCountry + 10 - 1,
     );
+    
+    useEffect(() => dispatch(getCountries()), [dispatch]);
+    useEffect(() => dispatch(getActivities()), [dispatch]);
 
     return (
         <>
             <div>
-                <NavBar />
+                <NavBar 
+                    handleActivitySelected={setActivitySelected}/>
 
                 <Filter
                     handleChangeCurrentPage={setCurrentPage}
-                    handleActivitySelected={setActivitySelected} />
+                   />
 
                 <div className='grid'>
-                    {currentCountries?.map((c) => (
+                    {currentCountries.length ? currentCountries.map((c) => (
                         <CountryCard
                             handleChangeCountrySelected={() => setCountrySelected(c)}
                             nombre={c.nombre}
                             bandera={c.bandera}
                             continente={c.continente}
-                            key={c.ID}
-                        />
-                    ))}
+                            key={c.ID} />
+                    )): <p className='loader'> </p> }
                 </div>
 
                 <Pagination
@@ -54,9 +59,6 @@ export default function Home() {
                 <ActivityCreate activity={activitySeleceted} close={() => setActivitySelected(null)} />
             )
             }
-
-            
-
         </>
-    )
+    );
 };

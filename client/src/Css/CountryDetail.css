@@ -10,8 +10,6 @@
     align-items: center;
     justify-content: center;
 }
-
-
 .detail{
     position: relative;
     background-color: white;
@@ -19,6 +17,7 @@
     justify-content: space-around;
     border-radius: 8px;
     padding: 30px;
+    gap: 30px;
 }
 
 .flag{
@@ -51,4 +50,11 @@
 .closeButon:hover{
     background-color: red;
     border-radius: 8px;
+}
+
+.actvitiesContainerDetail{
+    background-color: lightsteelblue;
+    border-radius: 5px;
+    height: 150px;
+    width: 160px;
 }
