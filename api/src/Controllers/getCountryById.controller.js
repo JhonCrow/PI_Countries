@@ -1,4 +1,3 @@
-
 const { CountryByIdService } = require('../services/CountryById.service');
 
 const getCountryByIdController =  async (req, res ) => {
@@ -8,14 +7,13 @@ const getCountryByIdController =  async (req, res ) => {
 
         res.status(200).json(getCountry);
 
-      } catch (error) {
+      } 
+    catch (error) {
         res.status(error.status || 400).json({
           message: error.message || error,
         });
-      }
-}
-
-
+      };
+};
 
 module.exports={
   getCountryByIdController,

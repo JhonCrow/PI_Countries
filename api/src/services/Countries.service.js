@@ -3,7 +3,7 @@ const { Op } = require("sequelize")
 const axios = require('axios');
 
 const getCountriesService = async (name) => {
-    
+
     try {
         const countriesDB = await axios.get('https://restcountries.com/v3/all');
         countriesDB.data.forEach(async (c) => {
@@ -20,10 +20,9 @@ const getCountriesService = async (name) => {
                 }
             })
         },
-        console.log('Datos cargados')
+            console.log('Datos cargados')
         );
-        
-        if(!name){
+        if (!name) {
             const paises = await Country.findAll({
                 include: [{
                     model: Activity,
@@ -31,33 +30,33 @@ const getCountriesService = async (name) => {
                         attributes: [],
                     }
                 }]
-            
             });
             console.log('Paises Mostrados');
             return paises;
 
-        }else if(name){
+        } else if (name) {
             const getCountry = await Country.findAll({
-                where:{
-                    nombre : {
+                where: {
+                    nombre: {
                         [Op.iLike]: `%${name}%`
                     }
-                }
+                },include: [{
+                    model: Activity,
+                    through: {
+                        attributes: [],
+                    }
+                }]
             });
             return getCountry;
         } else {
-            
             console.log('El Pais no se encontro');
             throw new Error('El Pais no se encontro');
-            
-        }
-        
-
-    }catch (error) {
+        };
+    } 
+    catch (error) {
         console.log(error);
         throw error;
-    }
+    };
 };
 
-/* getCountriesService() */
-module.exports = { getCountriesService }
+module.exports = { getCountriesService };

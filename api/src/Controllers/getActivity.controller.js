@@ -5,12 +5,14 @@ const getActivitiesController = async (req, res) => {
         const getAllActivities = await getActivitiesService();
         res.status(200).json(getAllActivities);
 
-    } catch (error) {
+    } 
+    catch (error) {
         res.status(error.status || 400).json({
             message: error.message || error,
         });
-    }
-}
+    };
+};
+
 module.exports = {
     getActivitiesController,
 };

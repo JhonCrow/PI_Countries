@@ -1,7 +1,6 @@
 const { Activity, Country } = require('../db');
 
 const getActivitiesService = async () => {
-
     try {
         const activities = await Activity.findAll({
             include: [{
@@ -12,9 +11,10 @@ const getActivitiesService = async () => {
             }]
         });
         return activities;
-    } catch (error) {
+    } 
+    catch (error) {
         console.log(error);
         throw error;
-    }
+    };
 };
-module.exports = { getActivitiesService }
+module.exports = { getActivitiesService };

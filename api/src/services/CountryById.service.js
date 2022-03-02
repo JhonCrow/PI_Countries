@@ -1,10 +1,10 @@
-const { Country, Activity } = require('../db')
-const { Op } = require("sequelize")
+const { Country, Activity } = require('../db');
+const { Op } = require("sequelize");
 
 const CountryByIdService = async (id) => {
 
     try {
-        const getCountry = await Country.findByPk(id,{
+        const getCountry = await Country.findByPk(id, {
             include: [{
                 model: Activity,
                 through: {
@@ -12,17 +12,17 @@ const CountryByIdService = async (id) => {
                 }
             }]
         });
-
         if (!getCountry) {
             console.log('El Pais no fue encontrado');
-            throw new Error( 'El Pais no fue encontrado');
+            throw new Error('El Pais no fue encontrado');
         };
         return getCountry;
 
-    } catch (error) {
+    } 
+    catch (error) {
         console.log(error);
         throw error;
-    }
+    };
 };
 
-module.exports = { CountryByIdService }
+module.exports = { CountryByIdService };
